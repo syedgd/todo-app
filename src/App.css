@@ -17,10 +17,16 @@
 }
 
 .TodoItem {
+  color: goldenrod;
   padding: 5px; 
   margin: 10px;
   border: 1px solid lightsalmon;
   border-radius: 5px;
+}
+
+.TodoItem.Done{
+  text-decoration: line-through;
+  
 }
 
 .NewTodoItem {
@@ -39,15 +45,28 @@
   text-align: center;
 }
 
-.App-title {
-  font-size: 1.5em;
+.TodoItem.ActionsBar {
+  color: blue;
+  padding: auto;
 }
 
-.App-intro {
-  font-size: large;
+.button {
+  text-align: center;
+  border: 1px solid blueviolet;
+  padding: 5px;
+  border-radius: 5px;
+  margin: 10px;
+  background-color: gold;
+  font-family: sans-serif;
+  font-size: 0.75em;
+  
+  
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.buttonsContainer {
+  margin: auto;
+}
+
+a {
+  text-decoration: none;
 }
