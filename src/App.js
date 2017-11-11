@@ -11,11 +11,27 @@ class TodoAppHeader extends Component {
 }
 
 class NewTodoItem extends Component {
+
+  AddTaskIfEnterPressed(e) {
+    var key = e.keyCode || e.which;
+    if(key===13) {
+      e.preventDefault();
+      var newTodo = {
+        id: this.props.todosCount+1,
+        title: document.getElementById("txtTodo").value,
+        isDone: false,
+      };
+      this.props.onAddNew(newTodo);
+      
+      
+    }
+  }
+
   render() {
 
     return(
     <div>
-        <input className="NewTodoItem" type='text' />
+      <input id="txtTodo" className="NewTodoItem" type='text' onKeyPress={(e)=>this.AddTaskIfEnterPressed(e)} />
     </div>
     );
   }
@@ -89,14 +105,60 @@ class ActionsBar extends Component {
 class App extends Component {
   constructor() {
     super();
+    this.currentActionView = "ALL";
     this.state = {
       todos: getTodoItems(),
     }
   }
 
   updateTodo(todo) {
+    var todos = getTodoItems();
+
+    let index = todos.findIndex((t) => {
+      return t.id === todo.id;
+    });
+  
+    todos[index]=Object.assign({}, todo);
+    //searchedTodo = Object.assign({}, todo);
+    
+    updateTodoItems(todos);
+
+    var todoToShow;
+    if(this.currentActionView=="ALL") {
+      todoToShow = getTodoItems();
+      this.setState(
+        {
+          todos: todoToShow,
+        }
+      );
+  
+    }
+    else {
+      this.showFilteredTodos(this.currentActionView=="COMPLETED"?true:false);
+    }
+  }
+
+  showFilteredTodos(pIsDone) {
+    this.currentActionView=pIsDone ? "COMPLETED" : "PENDING";
+    var allTodos = getTodoItems();
+    var filteredTodos = allTodos.filter(todo => todo.isDone===pIsDone);
+    this.setState({
+      todos: filteredTodos,
+    });
+  }
+
+  showAllTodos() {
+    this.currentActionView="ALL";
+    var allTodos = getTodoItems();
+    //var filteredTodos = allTodos.filter(todo => todo.isDone==pIsDone);
+    this.setState({
+      todos: allTodos,
+    });
+  }
+
+  AddNewTodo(newTodo) {
     var todos = this.state.todos.slice();
-    todos[todo.id-1] = todo;
+    todos.push(newTodo);
     updateTodoItems(todos);
     this.setState(
       {
@@ -105,28 +167,11 @@ class App extends Component {
     )
   }
 
-  showFilteredTodos(pIsDone) {
-    var allTodos = getTodoItems();
-    var filteredTodos = allTodos.filter(todo => todo.isDone==pIsDone);
-    this.setState({
-      todos: filteredTodos,
-    });
-  }
-
-  showAllTodos() {
-    var allTodos = getTodoItems();
-    //var filteredTodos = allTodos.filter(todo => todo.isDone==pIsDone);
-    this.setState({
-      todos: allTodos,
-    });
-  }
-
-
   render() {
     return (
       <div className='App'>
         <TodoAppHeader />
-        <NewTodoItem />
+        <NewTodoItem onAddNew = {(newTodo)=>this.AddNewTodo(newTodo)} todosCount = {this.state.todos.length} />
         <TodoList todos = {this.state.todos} onClick={ (todo) => this.updateTodo(todo)} />
         <ActionsBar buttonClick={(a)=>this.showFilteredTodos(a)} onClickShowAll={()=>this.showAllTodos()} />
       </div>
@@ -161,4 +206,6 @@ function getTodoItems() {
 function updateTodoItems(pTodos) {
   globalTodos = pTodos.slice();
 }
+
+
 export default App;
