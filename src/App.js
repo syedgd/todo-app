@@ -29,7 +29,7 @@ class TodoItem extends Component {
     updatedTodo.isDone = !this.props.todo.isDone;
     //this.props.todo.isDone = !this.props.todo.isDone;
     this.props.onClick(updatedTodo);
-  }
+  }   
 
   render() {
     var isDone = this.props.todo.isDone ? 'checked' : '';
@@ -38,7 +38,7 @@ class TodoItem extends Component {
     return (
       <div className={"TodoItem" + (this.props.todo.isDone ? ' Done' : '')}>
         
-            <input type='checkbox' checked={isDone} onChange={this.updateTodo()}  value= {this.props.todo.id} /> {this.props.todo.title}
+            <input type='checkbox' checked={isDone} onChange={()=>this.updateTodo()}  value= {this.props.todo.id} /> {this.props.todo.title}
         
       </div>
     );
@@ -53,7 +53,7 @@ class TodoList extends Component {
    var todos = this.props.todos.map((todo, index)=>{
         return(
           <div>
-           <TodoItem key = {index} todo = {todo} onClick={()=>this.props.onClick} /> 
+           <TodoItem key = {index} todo = {todo} onClick={(a)=>this.props.onClick(a)} /> 
           </div>
         );
     }); 
@@ -76,9 +76,9 @@ class ActionsBar extends Component {
         <div className="buttonsContainer">
           <table className="buttonsContainer">
             <tr className="buttonsContainer">
-              <td><a href="#"><span className="button">All</span></a></td>
-              <td><a href="#" onClick={this.showFilteredTodos(true)}><span className="button">Completed</span></a></td>
-              <td><a href="#" onClick={this.showFilteredTodos(false)}><span className="button">Pending</span></a></td>
+              <td><a href="#" onClick={()=>this.props.onClickShowAll()}><span className="button">All</span></a></td>
+              <td><a href="#" onClick={()=>this.showFilteredTodos(true)}><span className="button">Completed</span></a></td>
+              <td><a href="#" onClick={()=>this.showFilteredTodos(false)}><span className="button">Pending</span></a></td>
           </tr>
           </table>
         </div>
@@ -96,7 +96,8 @@ class App extends Component {
 
   updateTodo(todo) {
     var todos = this.state.todos.slice();
-    todos[todo.id] = todo;
+    todos[todo.id-1] = todo;
+    updateTodoItems(todos);
     this.setState(
       {
         todos: todos,
@@ -105,12 +106,20 @@ class App extends Component {
   }
 
   showFilteredTodos(pIsDone) {
-    var filteredTodos = this.state.todos.filter(todo => todo.isDone==pIsDone);
+    var allTodos = getTodoItems();
+    var filteredTodos = allTodos.filter(todo => todo.isDone==pIsDone);
     this.setState({
       todos: filteredTodos,
     });
   }
 
+  showAllTodos() {
+    var allTodos = getTodoItems();
+    //var filteredTodos = allTodos.filter(todo => todo.isDone==pIsDone);
+    this.setState({
+      todos: allTodos,
+    });
+  }
 
 
   render() {
@@ -118,34 +127,38 @@ class App extends Component {
       <div className='App'>
         <TodoAppHeader />
         <NewTodoItem />
-        <TodoList todos = {this.state.todos} onClick={ todo => this.updateTodo(todo)} />
-        <ActionsBar buttonClick={isDone=>this.showFilteredTodos(isDone)} />
+        <TodoList todos = {this.state.todos} onClick={ (todo) => this.updateTodo(todo)} />
+        <ActionsBar buttonClick={(a)=>this.showFilteredTodos(a)} onClickShowAll={()=>this.showAllTodos()} />
       </div>
     );
   }
 }
 
-function getTodoItems() {
-  var todos =     
-      [
-        {
-        id: 1,
-        title: 'shopping',
-        isDone: true,
-        },
-        {
-        id: 2,
-        title: 'exam prep',
-        isDone: false,
-        },
+var globalTodos =     
+[
+  {
+  id: 1,
+  title: 'shopping',
+  isDone: true,
+  },
+  {
+  id: 2,
+  title: 'exam prep',
+  isDone: false,
+  },
 
-        {
-          id: 3,
-          title: 'running',
-          isDone: true,
-        }
-    ];
-  
-    return todos;
+  {
+    id: 3,
+    title: 'running',
+    isDone: true,
+  }
+];
+
+function getTodoItems() {
+      return globalTodos;
+}
+
+function updateTodoItems(pTodos) {
+  globalTodos = pTodos.slice();
 }
 export default App;
