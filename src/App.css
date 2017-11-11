@@ -23,6 +23,21 @@
   border-radius: 5px;
 }
 
+.NewTodoItem {
+  padding: 5px; 
+  width: 240px;
+  margin: 10px 10px 10px 25px;
+  border: 1px solid lightsalmon;
+  background-color: lightgoldenrodyellow;
+  border-radius: 5px;
+}
+
+.TodoHeader {
+  font-size: 2em;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  color: goldenrod;
+  text-align: center;
+}
 
 .App-title {
   font-size: 1.5em;

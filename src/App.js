@@ -2,6 +2,25 @@ import React, { Component } from 'react';
 import './App.css';
 
 
+class TodoAppHeader extends Component {
+  render() {
+    return(
+      <div className="TodoHeader">Todo List</div>
+    );
+  }
+}
+
+class NewTodoItem extends Component {
+  render() {
+
+    return(
+    <div>
+        <input className="NewTodoItem" type='text' />
+    </div>
+    );
+  }
+}
+
 class TodoItem extends Component {
   
   
@@ -67,6 +86,8 @@ class App extends Component {
   render() {
     return (
       <div className='App'>
+        <TodoAppHeader />
+        <NewTodoItem />
         <TodoList todos = {this.state.todos} onClick={ todo => this.updateTodo(todo)} />
       </div>
     );
