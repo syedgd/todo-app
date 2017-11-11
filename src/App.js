@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-//import './App.css';
+import './App.css';
 
 
 class TodoItem extends Component {
@@ -17,9 +17,9 @@ class TodoItem extends Component {
     
   
     return (
-      <div>
+      <div className="TodoItem">
         
-            <li> <input type='checkbox' checked={isDone} onChange={this.updateTodo()}  value= {this.props.todo.id} /> {this.props.todo.title}</li>
+            <input type='checkbox' checked={isDone} onChange={this.updateTodo()}  value= {this.props.todo.id} /> {this.props.todo.title}
         
       </div>
     );
@@ -30,6 +30,7 @@ class TodoItem extends Component {
 class TodoList extends Component {
  
   render() {
+  
    var todos = this.props.todos.map((todo, index)=>{
         return(
           <div>
@@ -38,7 +39,8 @@ class TodoList extends Component {
         );
     }); 
 
-    return (todos);
+    
+    return (<div className='TodoList'>{todos}</div>);
   }
 }
 
@@ -64,7 +66,7 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <div className='App'>
         <TodoList todos = {this.state.todos} onClick={ todo => this.updateTodo(todo)} />
       </div>
     );
